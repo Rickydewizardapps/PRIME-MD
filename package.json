@@ -6,6 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "dev": "node index.js",
+    "build": "node build.js",
     "start": "pm2 start index.js --deep-monitoring --attach --name PRIME-MD",
     "stop": "pm2 stop PRIME-MD",
     "restart": "pm2 restart PRIME-MD && pm2 logs",
@@ -60,8 +61,8 @@
     "pg": "*",
     "pino": "^7.0.5",
     "pm2": "latest",
-    "qrcode-terminal": "^0.12.0",
     "qrcode": "^1.5.3",
+    "qrcode-terminal": "^0.12.0",
     "sequelize": "*",
     "sharp": "0.32.6",
     "sqlite3": "^5.1.7",
@@ -84,5 +85,8 @@
     "sharp@0.32.6": true,
     "sharp@0.30.7": true,
     "sqlite3@5.1.7": true
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^5.6.0"
   }
 }

@@ -1,1 +1,23 @@
 node_modules
+
+# Readable source — only the obfuscated build output at the repo root
+# gets committed. Regenerate it anytime with `npm run build`.
+src/
+
+# Secrets — never commit a real session or pairing secret
+.env
+.env.*
+
+# Live bot data — bans, settings, message store, sudo list, etc.
+lib/database/database.db
+lib/database/*.db
+lib/database/*.sqlite
+
+# Session/pairing temp folders
+pair_temp/
+pair_auth_temp/
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
