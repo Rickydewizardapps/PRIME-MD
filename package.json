@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "dev": "node index.js",
-    "build": "node build.js",
+    "build:obfuscate": "node build.js",
     "start": "pm2 start index.js --deep-monitoring --attach --name PRIME-MD",
     "stop": "pm2 stop PRIME-MD",
     "restart": "pm2 restart PRIME-MD && pm2 logs",
