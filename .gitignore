@@ -1,7 +1,10 @@
 node_modules
 
+# Regenerated locally by npm install — not tracked to avoid local/CI drift
+package-lock.json
+
 # Readable source — only the obfuscated build output at the repo root
-# gets committed. Regenerate it anytime with `npm run build`.
+# gets committed. Regenerate it anytime with `npm run build:obfuscate`.
 src/
 
 # Secrets — never commit a real session or pairing secret

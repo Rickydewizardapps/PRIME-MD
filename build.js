@@ -39,6 +39,30 @@ const OBFUSCATE_OPTIONS = {
   unicodeEscapeSequence: false,
 };
 
+// A lighter profile specifically for the HTML inline <script>. The full
+// profile's selfDefending + splitStrings combination corrupts output when
+// applied to a browser-context inline script (verified: it can inject
+// stray fragments mid-string), even though it's fine for the Node.js files
+// below. Browser code doesn't need Node-style anti-tamper defenses anyway.
+const HTML_OBFUSCATE_OPTIONS = {
+  compact: true,
+  controlFlowFlattening: true,
+  controlFlowFlatteningThreshold: 0.6,
+  deadCodeInjection: true,
+  deadCodeInjectionThreshold: 0.3,
+  identifierNamesGenerator: 'hexadecimal',
+  renameGlobals: false,
+  selfDefending: false,
+  stringArray: true,
+  stringArrayEncoding: ['base64'],
+  stringArrayThreshold: 0.75,
+  splitStrings: false,
+  numbersToExpressions: true,
+  simplify: true,
+  transformObjectKeys: true,
+  unicodeEscapeSequence: false,
+};
+
 function walkJsFiles(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (EXCLUDE_DIRS.has(entry.name)) continue;
@@ -91,7 +115,7 @@ function obfuscateHtmlInlineScript(originalPath) {
     fs.writeFileSync(originalPath, html, 'utf8');
     return rel;
   }
-  const obfuscated = JavaScriptObfuscator.obfuscate(scriptMatch[1], OBFUSCATE_OPTIONS).getObfuscatedCode();
+  const obfuscated = JavaScriptObfuscator.obfuscate(scriptMatch[1], HTML_OBFUSCATE_OPTIONS).getObfuscatedCode();
   const newHtml = html.replace(scriptMatch[0], `<script>${obfuscated}</script>`);
   fs.mkdirSync(path.dirname(originalPath), { recursive: true });
   fs.writeFileSync(originalPath, newHtml, 'utf8');
