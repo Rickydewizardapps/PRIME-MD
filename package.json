@@ -27,7 +27,7 @@
   "author": "devrickydewizard",
   "license": "MIT",
   "engines": {
-    "node": "20.x"
+    "node": ">=20"
   },
   "dependencies": {
     "@hapi/boom": "*",

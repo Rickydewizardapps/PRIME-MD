@@ -2,6 +2,9 @@ src/
 node_modules/
 package-lock.json
 .env
-lib/session/
+.env.*
+pair_temp/
+pair_auth_temp/
 *.db
-.git/
+.DS_Store
+'~'
