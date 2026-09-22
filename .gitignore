@@ -8,3 +8,4 @@ pair_auth_temp/
 *.db
 .DS_Store
 '~'
+CHANGES.md
