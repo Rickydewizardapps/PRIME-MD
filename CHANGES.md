@@ -90,3 +90,13 @@ Fix:
 - Could not verify from this environment whether apiskeith.top or PLUGIN_API are currently
   reachable/working (sandboxed network only allows a fixed host list) - check the bot's own
   logs after the next failure for the real cause.
+
+## Fix: status view/like (and other identity lookups) using a field that doesn't exist
+Both PRIME's original code and the reference bot's code used `key.participantPn` /
+`key.senderPn` to prefer a real phone number over a LID. Checked against Baileys' own
+source: those fields do not exist anywhere on a message key - only `participantAlt` and
+`remoteJidAlt` do (confirmed against Baileys' own getKeyAuthor helper, which uses exactly
+that precedence). Every "prefer phone number" branch was silently dead code, always
+falling through to the LID form. Replaced every occurrence (status view/like, antidelete,
+anti-porn, anti-edit, message serialization, sender resolution) with the real fields.
+This is very likely why status view/like weren't registering with WhatsApp.
