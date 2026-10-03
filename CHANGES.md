@@ -233,3 +233,12 @@ noisy by design.
   still a member, are untouched).
 - Added console logging at each step (attempt / WhatsApp status / thrown error) so a future
   failure shows the real reason instead of needing to guess again.
+
+## Audited every group membership command for the same silent-failure bug
+promote and demote had the exact same issue kick did: WhatsApp can reject the action
+without throwing a JS error, and the old code reported success regardless. Both now check
+the real per-participant status and report an honest failure. add's catch-all branch could
+silently claim success on an unexpected status code too; tightened to only report success
+on an actual 200. META AI add/remove were already correct. The bulk group-termination
+command removes everyone then leaves immediately after, so a per-member failure there
+doesn't change the outcome - left as is.
