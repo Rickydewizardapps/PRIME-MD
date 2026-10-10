@@ -281,3 +281,23 @@ Reviewed against a third-party reference implementation (wa-fixes.js) you shared
   that don't show up as a protocol message in messages.upsert) and a shared dedup reservation
   so both paths can never double-alert on the same deletion. Tested directly: simultaneous
   firing from both paths produces exactly one alert, not two.
+
+## New: .clear command
+Clears the current chat. In a group: if both you and the bot are admins, it deletes every
+cached message for everyone (admins can remove any member's message on WhatsApp); if the
+bot isn't an admin, it falls back to clearing only the bot's own view, with a clear
+explanation why. In a DM: the bot's own sent messages are deleted for everyone, and
+everything else is cleared from the bot's own view only - WhatsApp has no way for anyone to
+delete someone else's DM message for them, so that limit is stated honestly rather than
+pretended away. Always finishes with a local clear so the bot's own view ends up empty with
+no leftover "message deleted" placeholders. Needed a new listRecentMessages() function in
+the message store to find message keys to act on; tested directly against the local
+(no-database) fallback.
+
+## Fixed: .repo command
+Broken by an earlier change (removing a hardcoded personal default so other deployments
+wouldn't show this project's own GitHub repo). With nothing set, .repo called GitHub's API
+with an empty path and returned a generic error. Now gives clear guidance instead - tells
+the owner how to set it (.setbotrepo owner/repo) and tells anyone else to ask the owner.
+Also improved the error message for a genuinely wrong/missing repo (404) vs. any other
+failure.
