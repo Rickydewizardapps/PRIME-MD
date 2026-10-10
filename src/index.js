@@ -326,6 +326,7 @@ async function connectToWhatsApp() {
         };
 
         sock = makeWASocket(socketConfig);
+installSendTracker(sock);
         global.sock = sock;
 
         // Populate the fast cache for every message the bot sees (its own
@@ -717,7 +718,7 @@ function setupAntiDelete(sock) {
             // Skip: deletions by the paired number itself, and anything inside the
             // bot's own chat (that is where alerts are delivered).
             const inSelfChat = jidNormalizedUser(chatJid) === jidNormalizedUser(currentBotJid);
-            if (byMe || deleter === currentBotJid || inSelfChat) {
+            if (botSentIds.has(deletedId) || inSelfChat) {
                 await removeAntiDelete(chatJid, deletedId);
                 _handledDeletes.delete(dedupeKey);
                 return;
@@ -893,7 +894,7 @@ function setupAntiDelete(sock) {
                 }
 
                 if (isProtocolMessage(ms)) continue;
-                if (key.fromMe) continue;
+                if (key.fromMe && botSentIds.has(key.id)) continue;
 
                 const actualMessage = getActualMessage(ms);
                 if (!actualMessage) continue;
@@ -911,10 +912,10 @@ function setupAntiDelete(sock) {
                     await antiSticker(ms, sock);
                 }
 
-                const sender = getSender(ms);
+                const sender = getSender(ms) || (key.fromMe ? currentBotJid : null);
                 const senderPushName = getPushName(ms);
 
-                if (!sender || sender === currentBotJid) continue;
+                if (!sender) continue;
 
                 // Download media NOW (before WhatsApp drops it) so the alert
                 // can always include the actual content, even for fast deletes.
