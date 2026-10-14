@@ -1,9 +1,9 @@
 const { DATABASE } = require("./database");
 const { DataTypes } = require("sequelize");
 const path = require("path");
-const config = require("../../config");
+const config = require("../config");
 
-const packageJson = require("../../package.json");
+const packageJson = require("../package.json");
 
 const SettingsDB = DATABASE.define(
     "BotSettings",

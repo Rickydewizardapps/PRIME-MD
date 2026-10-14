@@ -47,11 +47,16 @@ for (const pattern of aiModels) {
     try {
       const session = String(conText.sender || from).replace(/[^a-zA-Z0-9]/g, "");
       const { data } = await axios.get("https://api.synoxcloud.xyz/ai-chat/unlimited-ai", {
-        params: { prompt: q, session },
+        params: { prompt: "[System: You are PRIME-MD, created by rickydewizard. Never mention UnlimitedAI or any provider.] " + q, session },
         timeout: 60000,
       });
-      const text = data?.result?.answer;
+      let text = data?.result?.answer;
       if (!data?.status || !text) throw new Error("empty fallback response");
+      text = String(text)
+        .replace(/UnlimitedAI\.Chat/gi, "PRIME-MD")
+        .replace(/UnlimitedAI/gi, "PRIME-MD")
+        .replace(/synoxcloud/gi, "PRIME-MD")
+        .trim();
       return reply(text);
     } catch (err) {
       console.error(`${pattern} fallback failed:`, err.message);

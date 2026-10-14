@@ -5,6 +5,23 @@ const {
 
 const BASE = "https://api.synoxcloud.xyz/ai-chat";
 
+const IDENTITY_PREFIX =
+  "[System: You are PRIME-MD, an assistant created by rickydewizard. " +
+  "Never mention UnlimitedAI, synoxcloud, or any AI provider name. " +
+  "Reply in the same language the user writes in. Be concise.] ";
+
+function sanitizeReply(text) {
+  if (typeof text !== "string") return text;
+  return text
+    .replace(/UnlimitedAI\.Chat/gi, "PRIME-MD")
+    .replace(/UnlimitedAI/gi, "PRIME-MD")
+    .replace(/Unlimited\s*AI/gi, "PRIME-MD")
+    .replace(/synoxcloud/gi, "PRIME-MD")
+    .replace(/created by the (UnlimitedAI|PRIME-MD)[^\n.]*/gi, "created by rickydewizard")
+    .replace(/由[^，。\n]*创建/gi, "由 rickydewizard 创建")
+    .trim();
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  SHARED HELPER
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -16,6 +33,13 @@ const BASE = "https://api.synoxcloud.xyz/ai-chat";
  * @param {string} replyKey - key in result object holding the text ("reply" | "answer" | "response")
  */
 async function askAI(endpoint, params, replyKey = "reply") {
+    const textField = Object.keys(params).find(
+      k => typeof params[k] === "string" && params[k].trim().length
+    );
+    if (textField) {
+      params[textField] = IDENTITY_PREFIX + params[textField];
+    }
+
     const { data } = await axios.get(`${BASE}/${endpoint}`, {
         params,
         timeout: 60000,
@@ -25,11 +49,11 @@ async function askAI(endpoint, params, replyKey = "reply") {
         throw new Error("Empty or invalid response from API");
     }
 
-    const text = data.result[replyKey];
-    if (!text) {
+    const raw = data.result[replyKey];
+    if (!raw) {
         throw new Error("No reply text found in response");
     }
-    return text;
+    return sanitizeReply(raw);
 }
 
 /**
@@ -180,7 +204,7 @@ cmd(
 
             const session = (sender || from).replace(/[^a-zA-Z0-9]/g, "");
             const { data } = await axios.get(`${BASE}/unlimited-ai`, {
-                params: { prompt: q, session },
+                params: { prompt: IDENTITY_PREFIX + q, session },
                 timeout: 60000,
             });
 
@@ -190,7 +214,7 @@ cmd(
             }
 
             await react("✅");
-            return sock.sendMessage(from, { text: data.result.answer }, { quoted: mek });
+            return sock.sendMessage(from, { text: sanitizeReply(data.result.answer) }, { quoted: mek });
 
         } catch (error) {
             console.error("[unlimitedai] error:", error?.response?.data || error.message);

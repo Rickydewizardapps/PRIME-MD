@@ -28,7 +28,7 @@ const { loadMsg } = require('./database/messageStore');
 const { DEV_NUMBERS } = require('./devNumbers');
 
 const GiftedApiKey = process.env.GIFTED_API_KEY || '_0u5aff45,_0l1876s8qc';
-const GiftedTechApi = 'https://api.gifted.co.ke';
+const GiftedTechApi = 'https://api.giftedtech.web.id'; 
 
 const DEFAULT_WARN_MESSAGE =
     `⚠️ *WARNING*\n👤 *User:* &mention\n🚸 *Warn:* &warn/&limit\n📍 *Remaining:* &remaining\n⭕ *Reason:* &reason`;
