@@ -2,12 +2,12 @@
   "name": "PRIME-MD",
   "version": "10.0.0",
   "description": "Advanced WhatsApp Multi-Device bot with AI features, media tools, automation, and dynamic plugins.",
-  "main": "src/index.js",
+  "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "node src/index.js",
+    "dev": "node index.js",
     "build:obfuscate": "node build.js",
-    "start": "node src/index.js",
+    "start": "node index.js",
     "stop": "pm2 stop PRIME-MD",
     "restart": "pm2 restart PRIME-MD && pm2 logs",
     "logs": "pm2 logs PRIME-MD",
@@ -27,7 +27,7 @@
   "author": "devrickydewizard",
   "license": "MIT",
   "engines": {
-    "node": "22.x"
+    "node": "20.x"
   },
   "dependencies": {
     "@hapi/boom": "*",
@@ -71,7 +71,8 @@
     "sharp": "0.32.6",
     "wa-sticker-formatter": "*",
     "yt-search": "^2.11.0",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "@distube/ytdl-core": "^4.16.0"
   },
   "repository": {
     "type": "git",
