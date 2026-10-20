@@ -301,3 +301,22 @@ with an empty path and returned a generic error. Now gives clear guidance instea
 the owner how to set it (.setbotrepo owner/repo) and tells anyone else to ask the owner.
 Also improved the error message for a genuinely wrong/missing repo (404) vs. any other
 failure.
+
+## gifted.co.ke is dead - YouTube song/video download replaced
+Live connectivity tests from a real device confirmed EVERY gifted.co.ke subdomain
+(api., cdn., files., ghbcdn., yts.) times out - the whole service is down, not just some
+endpoints. play.js's "six fallback endpoints" were all the same dead host under six
+different URL paths, so they all failed together and never actually provided redundancy.
+- .play and .video now extract YouTube audio/video via the btch-downloader package instead.
+  queryAPI() keeps the exact same return shape as before, so everything downstream (captions,
+  buttons, retry-on-bad-buffer, large-file-as-document handling) is untouched. Tested the
+  surrounding logic directly (audio picks mp3, video picks mp4, failed/empty responses
+  produce a clean error) - the actual network call can't be tested from the build
+  environment and needs a live check on the device.
+- btch-downloader itself relies on one third-party backend (backend1.tioo.eu.org), the same
+  structural risk gifted.co.ke had. Errors now surface the real cause (global
+  describeApiError helper) so any future outage is visible immediately, not silent.
+- STILL USING THE DEAD HOST (not yet replaced): downloader.js (other platforms), tourl.js
+  alicdn/githubcdn uploads, shortener.js, tempmail.js, general.js, owner.js, owner2.js,
+  tools.js, tools#U00b2.js, search.js, search2.js, Functions2.js, Functions3.js.
+  catbox/pixhost/imgbb uploads in tourl.js need checking separately for their own hosts.
