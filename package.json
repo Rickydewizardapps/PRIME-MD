@@ -32,7 +32,6 @@
   "dependencies": {
     "@hapi/boom": "*",
     "@vitalets/google-translate-api": "^9.2.0",
-    "@whiskeysockets/baileys": "^7.0.0-rc13",
     "acrcloud": "*",
     "adm-zip": "*",
     "audio-decode": "^2.2.3",
@@ -72,7 +71,8 @@
     "wa-sticker-formatter": "*",
     "yt-search": "^2.11.0",
     "sqlite3": "^5.1.7",
-    "btch-downloader": "^6.4.0"
+    "btch-downloader": "^6.4.0",
+    "blacklord-baileys": "latest"
   },
   "repository": {
     "type": "git",
